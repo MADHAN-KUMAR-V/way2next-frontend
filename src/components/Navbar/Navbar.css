@@ -1,0 +1,18 @@
+.navbar_container{
+    height: 70px;
+    width: 120%;
+    background-color:white;
+    box-shadow: 10px 0px 5px rgba(0, 0, 0, 0.2);
+}
+.navbar_heading{
+    display: flex;
+    align-items: center;
+    height: 70px;
+    padding: 0 5%;
+    background-color: white;
+}
+@media only screen and (max-width: 641px){
+    .navbar_heading{
+        font-size: 1.3rem;
+    }
+}
