@@ -1,20 +1,15 @@
-import React, { useEffect, useState } from 'react'
+
 import ReactPaginate from 'react-paginate'
 import './Pagination.css'
-import axios from 'axios'
 
-const Pagination = ({toatalPage,API_URL,setCollegeList,searchInput,setCurrPage,currPage,getCollegePage}) => {
-    
-    const handlePageChange = (data)=>{
-      setCurrPage(data.selected)
-     
-    }
-  
 
-    useEffect(()=>{
-      getCollegePage();
-    },[currPage])
+const Pagination = ({pages,setCurrPage,currPage}) => {
    
+
+  const handlePageChange = (data)=>{
+    setCurrPage(data.selected)
+  }
+
 
   return (
     <>
@@ -23,7 +18,7 @@ const Pagination = ({toatalPage,API_URL,setCollegeList,searchInput,setCurrPage,c
     previousLabel={"<"}
     nextLabel={">"}
     breakLabel={"..."}
-    pageCount={toatalPage}
+    pageCount={pages.totalPages}
     marginPagesDisplayed={3}
     onPageChange={handlePageChange}
     containerClassName={'pagination'}
@@ -33,6 +28,8 @@ const Pagination = ({toatalPage,API_URL,setCollegeList,searchInput,setCurrPage,c
     nextClassName={'page-link'}
     breakLinkClassName={'page-link'}
     activeClassName={'active'}
+    renderOnZeroPageCount={null}
+    forcePage = {currPage}
     />
     </div>
     </>

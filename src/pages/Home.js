@@ -5,56 +5,65 @@ import axios from 'axios'
 import Card from '../components/Card/Card'
 import Pagination from '../components/Pagenation/Pagination'
 
+
 const Home = ({API_URL}) => {
   
   const[searchInput,setSearchInput] = useState('');
   const[collegeList,setCollegeList] = useState([]);
-  const[page,setPage]=useState([])
-  const[currPage,setCurrPage]=useState(0)
+  const[pages,setPages]=useState([])
+  const[currPage,setCurrPage] = useState(0)
+  const[isEmpty,setIsEmpty]=useState(true)
   
-
-  //search
+ 
+ //search input
   const searchSubmit = (e)=>{
     e.preventDefault();
-    getColleges();
+    searchCollege()
   }
-  
-
-  //search
+ //empty
   useEffect(()=>{
-    if(searchInput===''){
-      getColleges()
+    if(searchInput.length>0){
+      setIsEmpty(false);
     }
-    
+    else{
+      setCurrPage(0)
+      allCollges();
+    }
   },[searchInput])
+
+  //list all college
+  useEffect(()=>{
+    allCollges();
+  },[])
+  const allCollges = async ()=>{
+    const allCollegeResult = await axios.get(`${API_URL}?size=12`)
+    setCollegeList(allCollegeResult.data.content)
+    setPages(allCollegeResult.data)
   
-  //home page
-  useEffect(() =>  {
-    getColleges(); 
-  }, []);
+  }
 
-  //get college list pagination
-  const getCollegePage = async ()=>{
-    try{
-      const res = await axios.get(`${API_URL}/search?college=${searchInput}&page=${currPage}&size=12`);
-      setCollegeList(res.data.content)
-    }
-    catch(e){
-      console.log(e)
-    }
-  };
+  //searchCollege
+  useEffect(()=>{
+    searchCollege();
+  },[])
+  const searchCollege = async ()=>{
+    const searchResult = await axios.get(`${API_URL}/search?college=${searchInput}&size=12`)
+    setCollegeList(searchResult.data.content)
+    setPages(searchResult.data)
+  }
 
-  // get all college
-  const getColleges = async ()=>{
-    try{
-      const res = await axios.get(`${API_URL}/search?college=${searchInput}&size=12&page=${currPage}`);
-      setPage(res.data)
-      setCollegeList(res.data.content)
-    }
-    catch(e){
-      console.log(e)
-    }
-  };
+  //pagination
+  useEffect(()=>{
+  
+    pageinationCollege();
+  },[currPage])
+  const pageinationCollege = async ()=>{
+    const pagenation = await axios.get(`${API_URL}/search?college=${searchInput}&size=12&page=${currPage}`)
+    setCollegeList(pagenation.data.content)
+
+  }
+
+
 
   return (
     <>
@@ -67,14 +76,10 @@ const Home = ({API_URL}) => {
       collegeList={collegeList}
     /> 
     <Pagination 
-      toatalPage={page.totalPages} 
-      API_URL={API_URL}
-      setCollegeList={setCollegeList}
-      searchInput={searchInput}
-      currPage={currPage}
-      setCurrPage={setCurrPage}
-      getCollegePage={getCollegePage}
-      />
+    pages={pages}
+    setCurrPage={setCurrPage}
+    currPage={currPage}
+    />
     </>
   )
 }

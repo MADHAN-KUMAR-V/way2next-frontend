@@ -3,7 +3,7 @@ import Home from "./pages/Home";
 import College from "./pages/College";
 
 function App() {
-  const API_URL = "https://way2next.onrender.com/api/v1/college"
+  const API_URL = "http://localhost:8080/api/v1/college"
   return (
     <BrowserRouter>
       <Routes>
